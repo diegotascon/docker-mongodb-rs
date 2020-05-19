@@ -1,0 +1,89 @@
+  # ES - Replica Set de MongoDB para desarrollo. v1.0
+  #      Inspirado en:
+  #         https://gist.github.com/harveyconnor/518e088bad23a273cae6ba7fc4643549
+  #      Contendrá 3 nodos expuestos en los puertos 27017, 27018 y 27019.
+  #      Los datos se guardarán en una máquina virtual Ubuntu 20.04 en
+  #          /home/diego/LlevAPP/MongoDB/mongo1/data
+  #          /home/diego/LlevAPP/MongoDB/mongo2/data
+  #          /home/diego/LlevAPP/MongoDB/mongo3/data
+
+  # CAT - Replica Set de MongoDB per desenvolupament. v1.0
+  #      Inspirat en:
+  #         https://gist.github.com/harveyconnor/518e088bad23a273cae6ba7fc4643549
+  #      Contindrà 3 nodes exposats als ports 27017, 27018 i 27019.
+  #      Les dades es desaran en una màquina virtual Ubuntu 20.04 a
+  #          /home/diego/LlevAPP/MongoDB/mongo1/data
+  #          /home/diego/LlevAPP/MongoDB/mongo2/data
+  #          /home/diego/LlevAPP/MongoDB/mongo3/data
+
+  # EN - Development MongoDB Replica Set. v1.0
+  #      Inspired in:
+  #         https://gist.github.com/harveyconnor/518e088bad23a273cae6ba7fc4643549
+  #      The RS will be composed by 3 nodes exposed on ports 27017, 27018 and 27019.
+  #      Data will be saved in an Ubuntu 20.04 virtual machine in
+  #          /home/diego/LlevAPP/MongoDB/mongo1/data
+  #          /home/diego/LlevAPP/MongoDB/mongo2/data
+  #          /home/diego/LlevAPP/MongoDB/mongo3/data
+
+  version: '2'
+
+  services:
+    mongo1:
+      hostname: mongo1
+      container_name: mongo1
+          # ES - Uso la imagen 4.2.6-bionic (para Linux) de mongo: https://hub.docker.com/_/mongo
+          # CAT - Utilizo la imatge 4.2.6-bionic (per Linux) de mongo: https://hub.docker.com/_/mongo
+          # EN - I'm using the 4.2.6-bionic image (for Linux) of mongo: https://hub.docker.com/_/mongo
+      image: mongo:4.2.6-bionic
+      expose:
+        - 27017
+      ports:
+        - 27017:27017
+      restart: always
+      # ES - Levanto mongod con autorización, llamando al Replica Set rs0 y
+      #      usando el fichero de clave rs0-keyfile, creado por MongoSetup.sh
+      # CAT - Aixeco mongod amb autorització, anomenant el Replica Set rs0 i
+      #       fent servir com fitxer de clau rs0-keyfile, generat per MongoSetup.sh
+      # EN - I start up mongod with autorisation, naming the Replica Set as rs0
+      #      and using a key file rs0-keyfile, created by MongoSetup.sh
+      entrypoint: [ "/usr/bin/mongod", "--auth", "--bind_ip_all",
+                                       "--replSet", "rs0",
+                                       "--keyFile", "/data/pki/rs0-keyfile" ]
+      volumes:
+        # ES - Substituye las rutas indicadas aquí por las de tu host
+        # CAT - Substitueix les rutes indicades per les de la teva màquina
+        # EN - Substitute the paths shown here with yours
+        - /home/diego/LlevAPP/MongoDB/mongo1/data:/data/db
+        - /home/diego/LlevAPP/MongoDB/pki:/data/pki
+        
+    mongo2:
+      hostname: mongo2
+      container_name: mongo2
+      image: mongo:4.2.6-bionic
+      expose:
+        - 27017
+      ports:
+          - 27018:27017
+      restart: always
+      entrypoint: [ "/usr/bin/mongod", "--auth", "--bind_ip_all",
+                                       "--replSet", "rs0",
+                                       "--keyFile", "/data/pki/rs0-keyfile" ]
+      volumes:
+        - /home/diego/LlevAPP/MongoDB/mongo2/data:/data/db
+        - /home/diego/LlevAPP/MongoDB/pki:/data/pki
+    
+    mongo3:
+      hostname: mongo3
+      container_name: mongo3
+      image: mongo:4.2.6-bionic
+      expose:
+        - 27017
+      ports:
+        - 27019:27017
+      restart: always
+      entrypoint: [ "/usr/bin/mongod", "--auth", "--bind_ip_all",
+                                       "--replSet", "rs0",
+                                       "--keyFile", "/data/pki/rs0-keyfile" ]
+      volumes:
+          - /home/diego/LlevAPP/MongoDB/mongo3/data:/data/db
+          - /home/diego/LlevAPP/MongoDB/pki:/data/pki
