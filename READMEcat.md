@@ -1,7 +1,7 @@
 # Replica Set de 3 nodes de MongoDB amb docker-compose
 
-[Versión en castellano](README.md)
-[English version](READMEen.md)
+- [Versión en castellano](README.md)
+- [English version](READMEen.md)
 
 En aquest mini projecte deixo com he muntat un Replica Set de MongoDB amb docker-compose.
 Està inspirat en https://gist.github.com/harveyconnor/518e088bad23a273cae6ba7fc4643549, https://github.com/msound/localmongo i d'altres.
@@ -25,10 +25,13 @@ Així que si has caigut aquí, és probable que hagis vist ja d'altres solucions
 
 Posada en marxa
 ---------------
-Per crear el Replica Set només cal executar MongoSetup.sh. Recorda adequar les rutes, l'usuari i la contrasenya al que necessitis abans d'executar-lo.
+Per crear el Replica Set només cal executar
+~~~
+MongoSetup.sh
+~~~
+Recorda adequar les rutes, l'usuari i la contrasenya al que necessitis abans d'executar-lo.
 
 Un cop creat el Replica Set, només cal controlar-lo mitjançant docker-compose:
-
 ~~~
 docker-compose stop
 docker-compose start
