@@ -69,19 +69,34 @@ db = db.getSiblingDB("admin")
 db.createUser({user:"root", pwd:"mongopass", roles:[{role:"root", db:"admin"}]})
 '
 
-# ES - Se añaden el resto de nodos al Replica Set
-# CAT - S'afegeixen la resta de nodes al Replica Set
-# EN - The rest of the nodes are added to the Replica Set
+# ES - Se añaden el resto de nodos al Replica Set. Se asigna un puerto diferente
+#      a cada nodo para permitir una conexión desde fuera de los contenedores
+#      (con Compass, por ejemplo, que intenta conectar a mongo1:27017, mongo2:27017,
+#      mongo3:27017 si se deja por defecto)
+# CAT - S'afegeixen la resta de nodes al Replica Set. S'assigna un port diferent
+#       a cada node per permetre una connexió des de fora dels contenidors (amb
+#       Compass, per exemple, que intenta connectar amb mongo1:27017, mongo2:27017,
+#       mongo3:27017 si es deixen els ports per defecte)
+# EN - The rest of the nodes are added to the Replica Set. A different port is
+#      assigned to each node to allow connections from the outside of the
+#      containers (with Compass, for example, which will try to connect to
+#      mongo1:27017, mongo2:27017, mongo3:27017 if default ports are used)
 echo --------------------------------------------------------------------------
 echo Anyadiendo el resto de nodos al Replica Set
 sleep 2
 # ES - Se podría hacer en la ejecución anterior como db.auth("root", "mongopass"), pero
 #      así se ve un ejemplo de cómo conectar con mongo
 docker container exec mongo1 mongo --host 'rs0/mongo1:27017' -u root -p mongopass --eval '
-rs.add("mongo2:27017")
-rs.add("mongo3:27017")
+rs.add("mongo2:27018")
+rs.add("mongo3:27019")
 '
 
 # echo --------------------------------------------------------------------------
 # echo Comprobaciones
 # docker container exec -it mongo1 bash
+
+# echo --------------------------------------------------------------------------
+# ES - Cadena de conexión para Compass desde la máquina que ejecuta los contenedores
+# CAT - Cadena de connexió per Compass des de la màquina que executa els contenidors
+# EN - Connection string for Compass executing on the containers host
+# mongodb://root:mongopass@mongo1:27017,mongo2:27018,mongo3:27019/admin?authSource=admin&replicaSet=rs0&readPreference=primary&appname=MongoDB%20Compass&ssl=false

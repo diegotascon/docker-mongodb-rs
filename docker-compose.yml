@@ -6,6 +6,8 @@
   #          /home/diego/LlevAPP/MongoDB/mongo1/data
   #          /home/diego/LlevAPP/MongoDB/mongo2/data
   #          /home/diego/LlevAPP/MongoDB/mongo3/data
+  #
+  # DTT v1.1: se cambian los puertos de los nodos a mongo2:27018 y mongo3:27019
 
   # CAT - Replica Set de MongoDB per desenvolupament. v1.0
   #      Inspirat en:
@@ -61,13 +63,14 @@
       container_name: mongo2
       image: mongo:4.2.6-bionic
       expose:
-        - 27017
+        - 27018
       ports:
-          - 27018:27017
+          - 27018:27018
       restart: always
       entrypoint: [ "/usr/bin/mongod", "--auth", "--bind_ip_all",
                                        "--replSet", "rs0",
-                                       "--keyFile", "/data/pki/rs0-keyfile" ]
+                                       "--keyFile", "/data/pki/rs0-keyfile",
+                                       "--port", "27018" ]
       volumes:
         - /home/diego/LlevAPP/MongoDB/mongo2/data:/data/db
         - /home/diego/LlevAPP/MongoDB/pki:/data/pki
@@ -77,13 +80,14 @@
       container_name: mongo3
       image: mongo:4.2.6-bionic
       expose:
-        - 27017
+        - 27019
       ports:
-        - 27019:27017
+        - 27019:27019
       restart: always
       entrypoint: [ "/usr/bin/mongod", "--auth", "--bind_ip_all",
                                        "--replSet", "rs0",
-                                       "--keyFile", "/data/pki/rs0-keyfile" ]
+                                       "--keyFile", "/data/pki/rs0-keyfile",
+                                       "--port", "27019" ]
       volumes:
           - /home/diego/LlevAPP/MongoDB/mongo3/data:/data/db
           - /home/diego/LlevAPP/MongoDB/pki:/data/pki
